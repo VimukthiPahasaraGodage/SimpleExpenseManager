@@ -15,7 +15,7 @@ public class SQLiteDatabaseHandler extends SQLiteOpenHelper {
             BALANCE_COLUMN_NAME + " REAL NOT NULL );";
 
     private static final String CREATE_TRANSACTIONS_TABLE = "CREATE TABLE " + TRANSACTIONS_TABLE_NAME +
-            " ( " + TRANSACTION_ID_COLUMN_NAME + " TEXT PRIMARY KEY, " +
+            " ( " + TRANSACTION_ID_COLUMN_NAME + " TEXT PRIMARY KEY AUTOINCREMENT, " +
             ACCOUNT_NUMBER_COLUMN_NAME + " INTEGER NOT NULL, " +
             TRANSACTION_DATE_COLUMN_NAME + " TEXT NOT NULL, " +
             EXPENSE_TYPE_COLUMN_NAME + " INTEGER NOT NULL, " +

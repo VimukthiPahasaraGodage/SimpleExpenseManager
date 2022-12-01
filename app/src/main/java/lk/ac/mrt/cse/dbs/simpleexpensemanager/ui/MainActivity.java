@@ -69,11 +69,7 @@ public class MainActivity extends AppCompatActivity {
         // Create a database and add table if not already exists
         SQLiteDatabaseHandler sqLiteDatabaseHandler = new SQLiteDatabaseHandler(this);
 
-        expenseManager = new PersistentExpenseManager(sqLiteDatabaseHandler);
-
-        /***  Begin generating dummy data for In-Memory implementation  ***/
-        expenseManager = new InMemoryDemoExpenseManager();
-        /*** END ***/
+        expenseManager = new PersistentExpenseManager(this, sqLiteDatabaseHandler);
     }
 
     /**

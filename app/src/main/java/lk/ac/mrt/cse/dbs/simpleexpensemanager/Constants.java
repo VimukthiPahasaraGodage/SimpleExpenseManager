@@ -36,4 +36,7 @@ public class Constants {
     public static final String TRANSACTION_DATE_COLUMN_NAME = "transaction_date";
     public static final String EXPENSE_TYPE_COLUMN_NAME = "expense_type";
     public static final String TRANSACTION_AMOUNT_COLUMN_NAME = "transaction_amount";
+
+    public static final int EXPENSE_TYPE_EXPENSE = 0;
+    public static final int EXPENSE_TYPE_INCOME = 1;
 }
