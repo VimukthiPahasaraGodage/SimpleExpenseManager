@@ -66,7 +66,7 @@ public class PersistentAccountDAO implements AccountDAO {
     public Account getAccount(String accountNo) throws InvalidAccountException {
         SQLiteDatabase database = sqLiteDatabaseHandler.getReadableDatabase();
         Cursor cursor = database.query(ACCOUNTS_TABLE_NAME,
-                new String[]{BANK_NAME_COLUMN_NAME, ACCOUNT_HOLDER_NAME_COLUMN_NAME, BANK_NAME_COLUMN_NAME},
+                new String[]{BANK_NAME_COLUMN_NAME, ACCOUNT_HOLDER_NAME_COLUMN_NAME, BALANCE_COLUMN_NAME},
                 ACCOUNT_NUMBER_COLUMN_NAME + " = ?" , new String[]{accountNo}, null, null, null);
         if(cursor != null && cursor.moveToFirst()){
             Account account = new Account(accountNo,
@@ -92,7 +92,7 @@ public class PersistentAccountDAO implements AccountDAO {
         if(database.insert(ACCOUNTS_TABLE_NAME, null, contentValues) != -1) {
             Toast.makeText(context, "New account with account number: " + account.getAccountNo() + " added successfully", Toast.LENGTH_SHORT).show();
         }else {
-            Toast.makeText(context, "An error occurred while inserting the account with account no: " + account.getAccountNo(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "An error while inserting the account with account number: " + account.getAccountNo(), Toast.LENGTH_SHORT).show();
         }
         database.close();
     }

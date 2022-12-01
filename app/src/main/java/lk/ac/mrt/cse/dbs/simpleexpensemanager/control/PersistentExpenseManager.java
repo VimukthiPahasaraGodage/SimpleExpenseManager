@@ -17,10 +17,12 @@ public class PersistentExpenseManager extends ExpenseManager{
     public PersistentExpenseManager(Context context, SQLiteDatabaseHandler sqLiteDatabaseHandler) {
         this.sqLiteDatabaseHandler = sqLiteDatabaseHandler;
         this.context = context;
+
+        setup();
     }
 
     @Override
-    public void setup() throws ExpenseManagerException {
+    public void setup() {
         AccountDAO persistentAccountDAO = new PersistentAccountDAO(context, sqLiteDatabaseHandler);
         setAccountsDAO(persistentAccountDAO);
 
