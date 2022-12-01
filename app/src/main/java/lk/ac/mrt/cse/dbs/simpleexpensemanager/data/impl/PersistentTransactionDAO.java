@@ -8,6 +8,10 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.ExpenseType;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Transaction;
 
 public class PersistentTransactionDAO implements TransactionDAO {
+
+    public PersistentTransactionDAO() {
+    }
+
     @Override
     public void logTransaction(Date date, String accountNo, ExpenseType expenseType, double amount) {
 
