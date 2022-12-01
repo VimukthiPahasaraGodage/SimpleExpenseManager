@@ -110,12 +110,16 @@ public class PersistentAccountDAO implements AccountDAO {
     }
 
     @Override
-    public void updateBalance(String accountNo, ExpenseType expenseType, double amount) throws InvalidAccountException {
+    public boolean updateBalance(String accountNo, ExpenseType expenseType, double amount) throws InvalidAccountException {
         SQLiteDatabase database = sqLiteDatabaseHandler.getWritableDatabase();
         Account account = getAccount(accountNo);
         double balance = account.getBalance();
         if(expenseType == ExpenseType.EXPENSE){
             balance -= amount;
+            if(balance < 0){
+                Toast.makeText(context, "Insufficient balance to perform transaction in account: " + accountNo, Toast.LENGTH_SHORT).show();
+                return false;
+            }
         }else {
             balance += amount;
         }
@@ -127,5 +131,6 @@ public class PersistentAccountDAO implements AccountDAO {
             Toast.makeText(context, "An error occurred while updating the balance of the account with the account number: " + accountNo, Toast.LENGTH_SHORT).show();
         }
         database.close();
+        return true;
     }
 }
