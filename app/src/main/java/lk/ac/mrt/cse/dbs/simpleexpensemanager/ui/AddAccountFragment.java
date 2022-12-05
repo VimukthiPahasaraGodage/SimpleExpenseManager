@@ -16,6 +16,8 @@
 
 package lk.ac.mrt.cse.dbs.simpleexpensemanager.ui;
 
+import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.EXPENSE_MANAGER;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -27,7 +29,6 @@ import android.widget.EditText;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.R;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.control.ExpenseManager;
 
-import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.EXPENSE_MANAGER;
 /**
  *
  */
@@ -39,6 +40,9 @@ public class AddAccountFragment extends Fragment implements View.OnClickListener
     private EditText initialBalance;
     private Button addAccount;
 
+    public AddAccountFragment() {
+    }
+
     public static AddAccountFragment newInstance(ExpenseManager expenseManager) {
         AddAccountFragment addAccountFragment = new AddAccountFragment();
         Bundle args = new Bundle();
@@ -47,17 +51,14 @@ public class AddAccountFragment extends Fragment implements View.OnClickListener
         return addAccountFragment;
     }
 
-    public AddAccountFragment() {
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_add_account, container, false);
-        accountNumber = (EditText) rootView.findViewById(R.id.account_num);
-        bankName = (EditText) rootView.findViewById(R.id.bank_name);
-        accountHolderName = (EditText) rootView.findViewById(R.id.account_holder_name);
-        initialBalance = (EditText) rootView.findViewById(R.id.initial_balance);
-        addAccount = (Button) rootView.findViewById(R.id.add_account);
+        accountNumber = rootView.findViewById(R.id.account_num);
+        bankName = rootView.findViewById(R.id.bank_name);
+        accountHolderName = rootView.findViewById(R.id.account_holder_name);
+        initialBalance = rootView.findViewById(R.id.initial_balance);
+        addAccount = rootView.findViewById(R.id.add_account);
         addAccount.setOnClickListener(this);
 
         currentExpenseManager = (ExpenseManager) getArguments().get(EXPENSE_MANAGER);

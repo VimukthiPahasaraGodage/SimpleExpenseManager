@@ -1,10 +1,17 @@
 package lk.ac.mrt.cse.dbs.simpleexpensemanager.data.impl;
 
+import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.ACCOUNTS_TABLE_NAME;
+import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.ACCOUNT_HOLDER_NAME_COLUMN_NAME;
+import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.ACCOUNT_NUMBER_COLUMN_NAME;
+import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.BALANCE_COLUMN_NAME;
+import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.BANK_NAME_COLUMN_NAME;
+
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +21,6 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.exception.InvalidAccountExcep
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Account;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.ExpenseType;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.db.SQLiteDatabaseHandler;
-import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.*;
 
 public class PersistentAccountDAO implements AccountDAO {
 
@@ -32,10 +38,10 @@ public class PersistentAccountDAO implements AccountDAO {
         SQLiteDatabase database = sqLiteDatabaseHandler.getReadableDatabase();
         Cursor cursor = database.query(ACCOUNTS_TABLE_NAME, new String[]{ACCOUNT_NUMBER_COLUMN_NAME},
                 null, null, null, null, null);
-        if(cursor != null && cursor.moveToFirst()){
+        if (cursor != null && cursor.moveToFirst()) {
             do {
                 accountNumbers.add(cursor.getString(cursor.getColumnIndex(ACCOUNT_NUMBER_COLUMN_NAME)));
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
             cursor.close();
         }
         return accountNumbers;
@@ -48,7 +54,7 @@ public class PersistentAccountDAO implements AccountDAO {
         Cursor cursor = database.query(ACCOUNTS_TABLE_NAME,
                 new String[]{ACCOUNT_NUMBER_COLUMN_NAME, BANK_NAME_COLUMN_NAME, ACCOUNT_HOLDER_NAME_COLUMN_NAME, BANK_NAME_COLUMN_NAME},
                 null, null, null, null, null);
-        if(cursor != null && cursor.moveToFirst()){
+        if (cursor != null && cursor.moveToFirst()) {
             do {
                 Account account = new Account(
                         cursor.getString(cursor.getColumnIndex(ACCOUNT_NUMBER_COLUMN_NAME)),
@@ -56,7 +62,7 @@ public class PersistentAccountDAO implements AccountDAO {
                         cursor.getString(cursor.getColumnIndex(ACCOUNT_HOLDER_NAME_COLUMN_NAME)),
                         cursor.getDouble(cursor.getColumnIndex(BALANCE_COLUMN_NAME)));
                 accounts.add(account);
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
             cursor.close();
         }
         return accounts;
@@ -67,16 +73,15 @@ public class PersistentAccountDAO implements AccountDAO {
         SQLiteDatabase database = sqLiteDatabaseHandler.getReadableDatabase();
         Cursor cursor = database.query(ACCOUNTS_TABLE_NAME,
                 new String[]{BANK_NAME_COLUMN_NAME, ACCOUNT_HOLDER_NAME_COLUMN_NAME, BALANCE_COLUMN_NAME},
-                ACCOUNT_NUMBER_COLUMN_NAME + " = ?" , new String[]{accountNo}, null, null, null);
-        if(cursor != null && cursor.moveToFirst()){
+                ACCOUNT_NUMBER_COLUMN_NAME + " = ?", new String[]{accountNo}, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
             Account account = new Account(accountNo,
                     cursor.getString(cursor.getColumnIndex(BALANCE_COLUMN_NAME)),
                     cursor.getString(cursor.getColumnIndex(ACCOUNT_HOLDER_NAME_COLUMN_NAME)),
                     cursor.getDouble(cursor.getColumnIndex(BALANCE_COLUMN_NAME)));
             cursor.close();
             return account;
-        }else {
-            Toast.makeText(context, "There is no account with the account number: " + accountNo, Toast.LENGTH_SHORT).show();
+        } else {
             throw new InvalidAccountException("There is no account with the account number: " + accountNo);
         }
     }
@@ -89,10 +94,10 @@ public class PersistentAccountDAO implements AccountDAO {
         contentValues.put(BANK_NAME_COLUMN_NAME, account.getBankName());
         contentValues.put(ACCOUNT_HOLDER_NAME_COLUMN_NAME, account.getAccountHolderName());
         contentValues.put(BALANCE_COLUMN_NAME, account.getBalance());
-        if(database.insert(ACCOUNTS_TABLE_NAME, null, contentValues) != -1) {
-            Toast.makeText(context, "New account with account number: " + account.getAccountNo() + " added successfully", Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(context, "An error while inserting the account with account number: " + account.getAccountNo(), Toast.LENGTH_SHORT).show();
+        if (database.insert(ACCOUNTS_TABLE_NAME, null, contentValues) != -1) {
+            showAlertDialog("Successfully added account: " + account.getAccountNo());
+        } else {
+            showAlertDialog("Error while adding account: " + account.getAccountNo());
         }
         database.close();
     }
@@ -100,11 +105,10 @@ public class PersistentAccountDAO implements AccountDAO {
     @Override
     public void removeAccount(String accountNo) throws InvalidAccountException {
         SQLiteDatabase database = sqLiteDatabaseHandler.getWritableDatabase();
-        if(database.delete(ACCOUNTS_TABLE_NAME, ACCOUNT_NUMBER_COLUMN_NAME + " = ?", new String[]{accountNo}) == 0){
-            Toast.makeText(context, "There is no account with the account number: " + accountNo, Toast.LENGTH_SHORT).show();
+        if (database.delete(ACCOUNTS_TABLE_NAME, ACCOUNT_NUMBER_COLUMN_NAME + " = ?", new String[]{accountNo}) == 0) {
             throw new InvalidAccountException("There is no account with the account number: " + accountNo);
-        }else {
-            Toast.makeText(context, "Successfully deleted the account with the account number: " + accountNo, Toast.LENGTH_SHORT).show();
+        } else {
+            showAlertDialog("Successfully removed the account: " + accountNo);
         }
         database.close();
     }
@@ -114,23 +118,31 @@ public class PersistentAccountDAO implements AccountDAO {
         SQLiteDatabase database = sqLiteDatabaseHandler.getWritableDatabase();
         Account account = getAccount(accountNo);
         double balance = account.getBalance();
-        if(expenseType == ExpenseType.EXPENSE){
+        if (expenseType == ExpenseType.EXPENSE) {
             balance -= amount;
-            if(balance < 0){
-                Toast.makeText(context, "Insufficient balance to perform transaction in account: " + accountNo, Toast.LENGTH_SHORT).show();
+            if (balance < 0) {
+                showAlertDialog("Insufficient balance in account: " + accountNo);
                 return false;
             }
-        }else {
+        } else {
             balance += amount;
         }
         ContentValues contentValues = new ContentValues();
         contentValues.put(BALANCE_COLUMN_NAME, balance);
-        if(database.update(ACCOUNTS_TABLE_NAME, contentValues, ACCOUNT_NUMBER_COLUMN_NAME + " = ?", new String[]{accountNo}) >= 1){
-            Toast.makeText(context, "Successfully updated the balance of the account with the account number: " + accountNo, Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(context, "An error occurred while updating the balance of the account with the account number: " + accountNo, Toast.LENGTH_SHORT).show();
-        }
+        int rowsAffected = database.update(ACCOUNTS_TABLE_NAME, contentValues, ACCOUNT_NUMBER_COLUMN_NAME + " = ?", new String[]{accountNo});
         database.close();
-        return true;
+        return rowsAffected >= 1;
+    }
+
+    private void showAlertDialog(String message) {
+        new AlertDialog.Builder(context)
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                }).create().show();
     }
 }

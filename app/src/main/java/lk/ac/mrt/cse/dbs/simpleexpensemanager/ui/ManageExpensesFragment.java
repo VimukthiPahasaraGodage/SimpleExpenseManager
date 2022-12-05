@@ -16,6 +16,8 @@
 
 package lk.ac.mrt.cse.dbs.simpleexpensemanager.ui;
 
+import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.EXPENSE_MANAGER;
+
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -36,7 +38,6 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.control.ExpenseManager;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.exception.InvalidAccountException;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.ExpenseType;
 
-import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.EXPENSE_MANAGER;
 /**
  *
  */
@@ -48,6 +49,9 @@ public class ManageExpensesFragment extends Fragment implements View.OnClickList
     private DatePicker datePicker;
     private ExpenseManager currentExpenseManager;
 
+    public ManageExpensesFragment() {
+    }
+
     public static ManageExpensesFragment newInstance(ExpenseManager expenseManager) {
         ManageExpensesFragment manageExpensesFragment = new ManageExpensesFragment();
         Bundle args = new Bundle();
@@ -56,17 +60,14 @@ public class ManageExpensesFragment extends Fragment implements View.OnClickList
         return manageExpensesFragment;
     }
 
-    public ManageExpensesFragment() {
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_manage_expenses, container, false);
-        submitButton = (Button) rootView.findViewById(R.id.submit_amount);
+        submitButton = rootView.findViewById(R.id.submit_amount);
         submitButton.setOnClickListener(this);
 
-        amount = (EditText) rootView.findViewById(R.id.amount);
-        accountSelector = (Spinner) rootView.findViewById(R.id.account_selector);
+        amount = rootView.findViewById(R.id.amount);
+        accountSelector = rootView.findViewById(R.id.account_selector);
         currentExpenseManager = (ExpenseManager) getArguments().get(EXPENSE_MANAGER);
         ArrayAdapter<String> adapter =
                 null;
@@ -76,10 +77,10 @@ public class ManageExpensesFragment extends Fragment implements View.OnClickList
         }
         accountSelector.setAdapter(adapter);
 
-        expenseTypeGroup = (RadioGroup) rootView.findViewById(R.id.expense_type_group);
-        RadioButton expenseType = (RadioButton) rootView.findViewById(R.id.expense);
-        RadioButton incomeType = (RadioButton) rootView.findViewById(R.id.income);
-        datePicker = (DatePicker) rootView.findViewById(R.id.date_selector);
+        expenseTypeGroup = rootView.findViewById(R.id.expense_type_group);
+        RadioButton expenseType = rootView.findViewById(R.id.expense);
+        RadioButton incomeType = rootView.findViewById(R.id.income);
+        datePicker = rootView.findViewById(R.id.date_selector);
         return rootView;
     }
 
@@ -89,7 +90,7 @@ public class ManageExpensesFragment extends Fragment implements View.OnClickList
             case R.id.submit_amount:
                 String selectedAccount = (String) accountSelector.getSelectedItem();
                 String amountStr = amount.getText().toString();
-                RadioButton checkedType = (RadioButton) getActivity().findViewById(expenseTypeGroup
+                RadioButton checkedType = getActivity().findViewById(expenseTypeGroup
                         .getCheckedRadioButtonId());
                 String type = (String) checkedType.getText();
 
@@ -111,11 +112,11 @@ public class ManageExpensesFragment extends Fragment implements View.OnClickList
                                 .setMessage(e.getMessage())
                                 .setNeutralButton(this.getString(R.string.msg_ok),
                                         new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                }).setIcon(android.R.drawable.ic_dialog_alert).show();
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                            }
+                                        }).setIcon(android.R.drawable.ic_dialog_alert).show();
                     }
                 }
                 amount.getText().clear();

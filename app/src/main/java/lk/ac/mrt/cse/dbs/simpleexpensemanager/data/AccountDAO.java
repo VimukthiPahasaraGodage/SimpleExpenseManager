@@ -33,14 +33,14 @@ public interface AccountDAO {
      *
      * @return - list of account numbers as String
      */
-    public List<String> getAccountNumbersList();
+    List<String> getAccountNumbersList();
 
     /***
      * Get a list of accounts.
      *
      * @return - list of Account objects.
      */
-    public List<Account> getAccountsList();
+    List<Account> getAccountsList();
 
     /***
      * Get the account given the account number.
@@ -49,14 +49,14 @@ public interface AccountDAO {
      * @return - the corresponding Account
      * @throws InvalidAccountException - if the account number is invalid
      */
-    public Account getAccount(String accountNo) throws InvalidAccountException;
+    Account getAccount(String accountNo) throws InvalidAccountException;
 
     /***
      * Add an account to the accounts collection.
      *
      * @param account - the account to be added.
      */
-    public void addAccount(Account account);
+    void addAccount(Account account);
 
     /***
      * Remove an account from the accounts collection.
@@ -64,7 +64,7 @@ public interface AccountDAO {
      * @param accountNo - of the account to be removed.
      * @throws InvalidAccountException - if the account number is invalid
      */
-    public void removeAccount(String accountNo) throws InvalidAccountException;
+    void removeAccount(String accountNo) throws InvalidAccountException;
 
     /***
      * Update the balance of the given account. The type of the expense is specified in order to determine which
@@ -76,7 +76,8 @@ public interface AccountDAO {
      * @param accountNo   - account number of the respective account
      * @param expenseType - the type of the transaction
      * @param amount      - amount involved
+     * @return - true if the balance of account is updated, false otherwise
      * @throws InvalidAccountException - if the account number is invalid
      */
-    public boolean updateBalance(String accountNo, ExpenseType expenseType, double amount) throws InvalidAccountException;
+    boolean updateBalance(String accountNo, ExpenseType expenseType, double amount) throws InvalidAccountException;
 }

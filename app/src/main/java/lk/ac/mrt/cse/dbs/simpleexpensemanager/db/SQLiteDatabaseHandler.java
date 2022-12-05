@@ -1,6 +1,17 @@
 package lk.ac.mrt.cse.dbs.simpleexpensemanager.db;
 
-import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.*;
+import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.ACCOUNTS_TABLE_NAME;
+import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.ACCOUNT_HOLDER_NAME_COLUMN_NAME;
+import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.ACCOUNT_NUMBER_COLUMN_NAME;
+import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.BALANCE_COLUMN_NAME;
+import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.BANK_NAME_COLUMN_NAME;
+import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.DATABASE_NAME;
+import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.DATABASE_VERSION;
+import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.EXPENSE_TYPE_COLUMN_NAME;
+import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.TRANSACTIONS_TABLE_NAME;
+import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.TRANSACTION_AMOUNT_COLUMN_NAME;
+import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.TRANSACTION_DATE_COLUMN_NAME;
+import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.TRANSACTION_ID_COLUMN_NAME;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

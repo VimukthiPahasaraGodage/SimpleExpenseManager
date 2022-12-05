@@ -16,6 +16,8 @@
 
 package lk.ac.mrt.cse.dbs.simpleexpensemanager.ui;
 
+import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.EXPENSE_MANAGER;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -33,12 +35,14 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.R;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.control.ExpenseManager;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Transaction;
 
-import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.EXPENSE_MANAGER;
 /**
  *
  */
 public class ExpenseLogsFragment extends Fragment {
     private ExpenseManager currentExpenseManager;
+
+    public ExpenseLogsFragment() {
+    }
 
     public static ExpenseLogsFragment newInstance(ExpenseManager expenseManager) {
         ExpenseLogsFragment expenseLogsFragment = new ExpenseLogsFragment();
@@ -48,14 +52,11 @@ public class ExpenseLogsFragment extends Fragment {
         return expenseLogsFragment;
     }
 
-    public ExpenseLogsFragment() {
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_expense_logs, container, false);
-        TableLayout logsTableLayout = (TableLayout) rootView.findViewById(R.id.logs_table);
-        TableRow tableRowHeader = (TableRow) rootView.findViewById(R.id.logs_table_header);
+        TableLayout logsTableLayout = rootView.findViewById(R.id.logs_table);
+        TableRow tableRowHeader = rootView.findViewById(R.id.logs_table_header);
 
         currentExpenseManager = (ExpenseManager) getArguments().get(EXPENSE_MANAGER);
         List<Transaction> transactionList = new ArrayList<>();
@@ -66,8 +67,7 @@ public class ExpenseLogsFragment extends Fragment {
         return rootView;
     }
 
-    private void generateTransactionsTable(View rootView, TableLayout logsTableLayout,
-                                           List<Transaction> transactionList) {
+    private void generateTransactionsTable(View rootView, TableLayout logsTableLayout, List<Transaction> transactionList) {
         for (Transaction transaction : transactionList) {
             TableRow tr = new TableRow(rootView.getContext());
             TextView lDateVal = new TextView(rootView.getContext());
